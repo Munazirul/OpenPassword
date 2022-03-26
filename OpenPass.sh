@@ -35,6 +35,45 @@ trap "echo  ;echo  ;echo [+] Thank you for using OpenPassword;echo Follow me on 
 #     fi
 # }
 
+function update_pass(){
+    echo "-> Do you want to generate a new password for $SERVICE1 or store the current Password(GENERATE/CURRENT): "
+        read GENEW1
+        if [[ $GENEW1 == 'generate' || $GENEW1 == 'GENERATE' ]]
+        then
+        GENERATED=$(</dev/urandom tr -dc 'A-Za-z0-9@#$%^&*/_+=' | head -c 14)
+        echo "$GENERATED" | openssl enc -aes-128-cbc -pbkdf2 -pass pass:$MASTERPASS_1 -a -out .$SERVICE1
+        sleep 2
+        echo "-> Your Passsword has been successfully generated and stored securely!"
+        sleep 2
+        generate_store
+        elif [[ $GENEW1 == 'CURRENT' || $GENEW1 == 'current' ]]
+        then
+        echo "-> Enter your password to be stored for $SERVICE1:"
+        read -s CURRENTPASS
+        echo "$CURRENTPASS" | openssl enc -aes-128-cbc -pbkdf2 -pass pass:$MASTERPASS_1 -a -out .$SERVICE1
+        sleep 2
+        echo "-> Your password has been stored successfully!"
+        generate_store
+        else
+        echo "-> Input Invalid!"
+        update_pass
+        fi
+}
+
+# function delete_pass(){
+#         echo "-> Do you want to generate a new password for $SERVICE2 or store the current Password(GENERATE/CURRENT): "
+#         read GENEW2
+#         if [[ $GENEW2 == 'generate' || $GENEW2 == 'GENERATE' ]]
+#         then
+#         generate
+#         elif [[ $GENEW2 == 'CURRENT' || $GENEW2 == 'current' ]]
+#         then
+#         store_pass
+#         else
+#         echo "-> Input Invalid!"
+#         update_pass
+#         fi
+# }
 
 function show_pass(){
     echo -e "-> Do you want to view or store a new password (VIEW/STORE/UPDATE/DELETE):\c"
@@ -58,17 +97,19 @@ fi
     ask_generate
     elif [[ $choice == 'UPDATE' || $choice == 'update' ]]; then
         echo "-> Specify the service for which you want to update your Password:"
-        read SERVICE
-        rm -rf .$SERVICE
-        sed /^$SERVICE$/d stored.txt > stored.txt
-        ask_generate
-    elif [[ $choice == 'DELET' || $choice == 'delete' ]]; then
+        read SERVICE1
+        rm -rf .$SERVICE1
+        # sed /^$SERVICE$/d stored.txt > stored.txt
+        update_pass
+        echo "Your password has been updated for $SERVICE1"
+        sleep 2
+    elif [[ $choice == 'DELETE' || $choice == 'delete' ]]; then
         echo "-> Specify the service for which you want to delete your Password:"
-        read SERVICE
-        rm -rf .$SERVICE
-        sed /^$SERVICE$/d stored.txt > stored.txt
-        sleep 2 
-        echo "Your passwordhas been deleted for $SERVICE"
+        read SERVICE2
+        rm -rf .$SERVICE2
+        sed -i "/$SERVICE2/d" stored.txt 
+        echo "Your password has been deleted for $SERVICE2"
+        sleep 2
         generate_store
     else
     echo "" ;echo "" ;echo "[+] Thank you for using OpenPassword";echo "Follow me on github: https://github.com/Munazirul";sleep 2;exit 0
