@@ -1,9 +1,9 @@
 #!/bin/bash
-if [[ `command -v openssl` && `command -v openssl` ]]; then
+if [[ `command -v openssl` ]]; then
     echo ""
 else
     echo "Required packages are not installed, installing it for you..."
-    apt-get install openssl md5sum -y >/dev/null 2>&1
+    apt-get install openssl -y >/dev/null 2>&1
 fi
 
 function banner(){
@@ -56,7 +56,7 @@ fi
     # echo "$SERVICE" >> stored.txt
     ask_generate
     else
-    exit 0
+    echo "" ;echo "" ;echo "[+] Thank you for using OpenPassword";echo "Follow me on github: https://github.com/Munazirul";sleep 2;exit 0
     fi
     # show_pass   
 }
@@ -112,7 +112,9 @@ function generate_store(){
  clear
  banner
  echo "-> Your passwords in the database are listed below"
+ echo "##########"
  cat stored.txt
+ echo "##########"
  show_pass
  fi
 }
