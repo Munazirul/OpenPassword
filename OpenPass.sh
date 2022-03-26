@@ -1,4 +1,5 @@
 #!/bin/bash
+clear
 if [[ `command -v openssl` ]]; then
     echo ""
 else
@@ -36,7 +37,7 @@ trap "echo  ;echo  ;echo [+] Thank you for using OpenPassword;echo Follow me on 
 
 
 function show_pass(){
-    echo -e "-> Do you want to view or store a new password (VIEW/STORE):\c"
+    echo -e "-> Do you want to view or store a new password (VIEW/STORE/UPDATE/DELETE):\c"
     read choice
     if [[ $choice == 'VIEW' || $choice == 'view' ]];
     then
@@ -55,6 +56,20 @@ fi
     read SERVICE
     # echo "$SERVICE" >> stored.txt
     ask_generate
+    elif [[ $choice == 'UPDATE' || $choice == 'update' ]]; then
+        echo "-> Specify the service for which you want to update your Password:"
+        read SERVICE
+        rm -rf .$SERVICE
+        sed /^$SERVICE$/d stored.txt > stored.txt
+        ask_generate
+    elif [[ $choice == 'DELET' || $choice == 'delete' ]]; then
+        echo "-> Specify the service for which you want to delete your Password:"
+        read SERVICE
+        rm -rf .$SERVICE
+        sed /^$SERVICE$/d stored.txt > stored.txt
+        sleep 2 
+        echo "Your passwordhas been deleted for $SERVICE"
+        generate_store
     else
     echo "" ;echo "" ;echo "[+] Thank you for using OpenPassword";echo "Follow me on github: https://github.com/Munazirul";sleep 2;exit 0
     fi
