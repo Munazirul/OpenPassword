@@ -3,7 +3,7 @@ OpenPassword is a Password Manager designed using shell programming for Linux. T
 
 This tool uses openssl to encrypt your stored passwords using a secret key, The secret key is your Master Password which is used login to OpenPassword.
 Master password is stored locally in md5hash Format.
-This makes the tool secure and can used for storing various passwords.
+This makes the tool secure and can be used for storing various passwords.
 
 # Steps to install this tool on your linux machine.
 1. `git clone https://github.com/Munazirul/OpenPassword`
