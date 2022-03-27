@@ -87,7 +87,7 @@ function show_pass(){
 if [[ ! -z choice1  ]]; then
     YOURPASSWORD=$(cat ".$choice1" | openssl enc -aes-128-cbc -a -d -pbkdf2 -pass pass:$MASTERPASS_1)
     # PASSWORD=$(cat $YOURPASSWORD)
-    printf "\n-> Your Password is: $YOURPASSWORD \n"
+    printf "\n-> Your Password is: "$YOURPASSWORD" \n"
     sleep 3
     show_pass
 fi
