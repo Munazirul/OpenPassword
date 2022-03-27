@@ -23,7 +23,7 @@ echo "#  github: github.com/Munazirul/OpenPassword                              
 echo "############################################################################"
 echo ""
 }
-trap "echo  ;echo  ;echo [+] Thank you for using OpenPassword;echo Follow me on github: https://github.com/Munazirul;sleep 2;exit 0" 2 5 10
+trap "echo  ;echo  ;echo [+] Thank you for using OpenPassword;echo Follow me on github: https://github.com/Munazirul;sleep 2;clear;exit 0" 2 5 10
 # function hashing(){
 #     file1=$(cat .master)
 #     pass1=$(echo "$file1" | md5sum > newmaster.txt)
@@ -112,7 +112,7 @@ fi
         sleep 2
         generate_store
     else
-    echo "" ;echo "" ;echo "[+] Thank you for using OpenPassword";echo "Follow me on github: https://github.com/Munazirul";sleep 2;exit 0
+    echo "" ;echo "" ;echo "[+] Thank you for using OpenPassword";echo "Follow me on github: https://github.com/Munazirul";sleep 2;clear;exit 0
     fi
     # show_pass   
 }
