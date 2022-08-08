@@ -1,11 +1,20 @@
 #!/bin/bash
 clear
-if [[ `command -v openssl` ]]; then
+if [[ `command -v termux-setup-storage` ]]; then
+    if [[ `command -v openssl` ]]; then
+        echo ""
+    else
+        echo "Required packages are not installed, installing it for you..."
+        pkg install openssl -y
+    fi
+elif [[ `command -v openssl` ]]; then
     echo ""
 else
     echo "Required packages are not installed, installing it for you..."
     apt-get install openssl -y >/dev/null 2>&1
 fi
+
+
 READHOSTNAME=$(hostname)
     SETHOSTNAME=$READHOSTNAME
 function banner(){
@@ -18,13 +27,13 @@ echo "#  | | | | '_ \|__ <| '_ \|  ___/ _  |__  \|___ \ \ /\ / / | | | '__/ _| |
 echo "#  | |_| | |_) |__) | | | | |  | (_| |___) |___) \ V  V /| |_| | | | (_| | #"
 echo "#   \___/| .__/____/|_| |_|_|   \__,_|____/|____/ \_/\_/  \___/|_|  \__,_| #"
 echo "#        | |                                                               #"
-echo "#        |_|                                                          v2.0 #"
+echo "#        |_|                                                          v2.5 #"
 echo "#  Developed by Munazir                                                    #"
 echo "#  github: github.com/Munazirul/OpenPassword                               #"
 echo "############################################################################"
 echo ""
 }
-trap "echo  ;echo  ;echo [+] Thank you for using OpenPassword;echo Follow me on github: https://github.com/Munazirul;sleep 2;clear;exit 0" 2 5 10
+trap "echo  ;echo  ;echo [+] Thank you for using OpenPassword;sleep 2;clear;exit 0" 2 5 10
 # function hashing(){
 #     file1=$(cat .master)
 #     pass1=$(echo "$file1" | md5sum > newmaster.txt)
@@ -42,7 +51,8 @@ function update_pass(){
         read -p "$SETHOSTNAME@OpenPassword~$" -r GENEW1
         if [[ $GENEW1 == 'generate' || $GENEW1 == 'GENERATE' ]]
         then
-        GENERATED=$(</dev/urandom tr -dc 'A-Za-z0-9@#$%^&*/_+=' | head -c 14)
+        # GENERATED=$(</dev/urandom tr -dc 'A-Za-z0-9@#$%^&*/_+=' | head -c 14)
+        GENERATED=$(</dev/urandom tr -dc 'A-Z0-9@#$^&*_+=a-z' | head -c 14)
         echo "$GENERATED" | openssl enc -aes-128-cbc -pbkdf2 -pass pass:$MASTERPASS_1 -a -out .$SERVICE1
         sleep 2
         echo "-> Your Passsword has been successfully generated and stored securely!"
@@ -52,6 +62,31 @@ function update_pass(){
         then
         printf "\n-> Enter your password to be stored for $SERVICE1\n"
         read -p "$SETHOSTNAME@OpenPassword~$" -r -s CURRENTPASS
+        echo "" 
+        echo ""
+        h="$(echo -n $CURRENTPASS | sha1sum | cut -d' ' -f1)" 
+        echo ""
+        echo "Checking online for password breach...."
+        echo ""
+        sleep 2
+        echo "SHA1: $h"; s="${h:0:5}" 
+        u="https://api.pwnedpasswords.com/range/$s"
+        echo "HTTP GET $u" 
+        r=$(curl -s "$u")
+        c=0
+        for l in $r
+        do t="$(echo "${s}${l%:*}" | tr 'A-Z' 'a-z')"
+        test "$t" == "$h" && c="$(echo ${l##*:} | tr -d "[:cntrl:]")"
+        done
+         if [[ c -gt 0 ]]; then
+             echo "Your password has been pwned $c time(s)"
+         echo ""
+         echo "Change your password immediately!!"
+         echo ""
+         notify-send "OpenPassword" "We have found your password online, Change it immediately"
+         echo "Saving..."
+        sleep 2
+         fi
         echo "$CURRENTPASS" | openssl enc -aes-128-cbc -pbkdf2 -pass pass:$MASTERPASS_1 -a -out .$SERVICE1
         sleep 2
         echo "-> Your password has been stored successfully!"
@@ -87,7 +122,7 @@ function show_pass(){
 if [[ ! -z choice1  ]]; then
     YOURPASSWORD=$(cat ".$choice1" | openssl enc -aes-128-cbc -a -d -pbkdf2 -pass pass:$MASTERPASS_1)
     # PASSWORD=$(cat $YOURPASSWORD)
-    printf "\n-> Your Password is: "$YOURPASSWORD" \n"
+    printf "\n-> Your Password is: $YOURPASSWORD \n"
     sleep 3
     show_pass
 fi
@@ -114,15 +149,16 @@ fi
         sleep 2
         generate_store
     elif [[ $choice == 'clear' || $choice == 'CLEAR' ]]; then
-        clear
+       clear
         generate_store
     else
-    echo "" ;echo "" ;echo "[+] Thank you for using OpenPassword";echo "Follow me on github: https://github.com/Munazirul";sleep 2;clear;exit 0
+    echo "" ;echo "" ;echo "[+] Thank you for using OpenPassword";sleep 2;clear;exit 0
     fi
     # show_pass   
 }
 function generate(){
-    GENERATED=$(</dev/urandom tr -dc 'A-Za-z0-9@#$%^&*/_+=' | head -c 14)
+    # GENERATED=$(</dev/urandom tr -dc 'A-Za-z0-9@#$%^&*/_+=' | head -c 14)
+    GENERATED=$(</dev/urandom tr -dc 'A-Z0-9@#$^&*_+=a-z' | head -c 14)
     echo "$GENERATED" | openssl enc -aes-128-cbc -pbkdf2 -pass pass:$MASTERPASS_1 -a -out .$SERVICE
     echo "$SERVICE" >> stored.txt
     sleep 2
@@ -133,6 +169,31 @@ function generate(){
 function store_pass(){
     printf "\n-> Enter your password to be stored for $SERVICE \n"
     read -p "$SETHOSTNAME@OpenPassword~$" -r -s CURRENTPASS
+    echo "" 
+        echo ""
+        h="$(echo -n $CURRENTPASS | sha1sum | cut -d' ' -f1)" 
+        echo ""
+        echo "Checking online for password breach...."
+        echo ""
+        sleep 2
+        echo "SHA1: $h"; s="${h:0:5}" 
+        u="https://api.pwnedpasswords.com/range/$s"
+        echo "HTTP GET $u" 
+        r=$(curl -s "$u")
+        c=0
+        for l in $r
+        do t="$(echo "${s}${l%:*}" | tr 'A-Z' 'a-z')"
+        test "$t" == "$h" && c="$(echo ${l##*:} | tr -d "[:cntrl:]")"
+        done
+       if [[ c -gt 0 ]]; then
+             echo "Your password has been pwned $c time(s)"
+         echo ""
+         echo "Change your password immediately!!"
+         echo ""
+         notify-send "OpenPassword" "We have found your password online, Change it immediately"
+         echo "Saving..."
+        sleep 2
+         fi
     echo "$CURRENTPASS" | openssl enc -aes-128-cbc -pbkdf2 -pass pass:$MASTERPASS_1 -a -out .$SERVICE
     echo "$SERVICE" >> stored.txt
     sleep 2
@@ -179,6 +240,34 @@ function generate_store(){
  show_pass
  fi
 }
+# function check_online(){
+#      B=$(cat spc)
+#      h="$(echo -n $B | sha1sum | cut -d' ' -f1)"
+#         echo ""
+#         echo "Checking online for password breach.... Please wait!" >/dev/null 2>&1
+#         echo ""
+#         # sleep 2
+#         echo "SHA1: $h" >/dev/null 2>&1; s="${h:0:5}" >/dev/null 2>&1
+#         u="https://api.pwnedpasswords.com/range/$s"  >/dev/null 2>&1
+#         echo "HTTP GET $u" >/dev/null 2>&1
+#         r=$(curl -s "$u")
+#         c=0
+#         for l in $r
+#         do t="$(echo "${s}${l%:*}" | tr 'A-Z' 'a-z')"
+#         test "$t" == "$h" && c="$(echo ${l##*:} | tr -d "[:cntrl:]")"
+#         done
+#         if [[ c -gt 0 ]]; then
+#              # echo "Your password has been pwned $c time(s)" >/dev/null 2>&1
+#              echo ""
+#         notify-send "OpenPassword" "Some of you passwords have been compramised, Change your passwords immediately" 
+#         rm -rf spc
+#     else
+#         # elif [[ c == 0 ]]; then
+#             #statements
+#      generate_store1
+#      fi
+     
+# }
 function validate_masterpassword(){
    # DECRYPTED=$(openssl enc -aes-128-cbc -a -d -pbkdf2 -pass pass:$(cat .key) -in .master -out tmp.txt)
    HASHED=$(echo "$MASTERPASS_1" | md5sum | cut -d " " -f 1)
