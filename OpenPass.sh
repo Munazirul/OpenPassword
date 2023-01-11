@@ -27,8 +27,8 @@ echo "#  | | | | '_ \|__ <| '_ \|  ___/ _  |__  \|___ \ \ /\ / / | | | '__/ _| |
 echo "#  | |_| | |_) |__) | | | | |  | (_| |___) |___) \ V  V /| |_| | | | (_| | #"
 echo "#   \___/| .__/____/|_| |_|_|   \__,_|____/|____/ \_/\_/  \___/|_|  \__,_| #"
 echo "#        | |                                                               #"
-echo "#        |_|                                                          v2.5 #"
-echo "#  Developed by Munazir                                                    #"
+echo "#        |_|                                                          v3.0 #"
+echo "#  Developed by Munazir                                https://munazir.com #"
 echo "#  github: github.com/Munazirul/OpenPassword                               #"
 echo "############################################################################"
 echo ""
@@ -152,7 +152,7 @@ fi
        clear
         generate_store
     else
-    echo "" ;echo "" ;echo "[+] Thank you for using OpenPassword";sleep 2;clear;exit 0
+    echo "" ;echo "" ;echo "[+] Thanks for using OpenPassword";sleep 2;clear;exit 0
     fi
     # show_pass   
 }
@@ -225,7 +225,7 @@ function generate_store(){
     ask_generate
     else
     # generate_store
-    printf "\n Thank you for using OpenPassword"
+    printf "\n Thanks for using OpenPassword"
     printf "\n Follow me on github: https://github.com/Munazirul"
     sleep 5
     exit 0
@@ -270,7 +270,7 @@ function generate_store(){
 # }
 function validate_masterpassword(){
    # DECRYPTED=$(openssl enc -aes-128-cbc -a -d -pbkdf2 -pass pass:$(cat .key) -in .master -out tmp.txt)
-   HASHED=$(echo "$MASTERPASS_1" | md5sum | cut -d " " -f 1)
+   HASHED=$(echo -n "$MASTERPASS_1" | sha256sum | cut -d " " -f 1)
    # DECRYPTED1=$(cat $HASHED)
    MASTER=$(cat .master | cut -d " " -f 1)
 if [ $HASHED == $MASTER ]
@@ -310,7 +310,7 @@ if [ $MASTERPASS ==  $CONFIRM_MASTERPASS ];
 then 
     echo "$HINT" > .hint
     #echo "$MASTERPASS" | openssl enc -aes-128-cbc -pbkdf2 -pass pass:$SECRETKEY -a -out .master
-    echo "$MASTERPASS" | md5sum | cut -d " " -f 1 > .master
+    echo -n "$MASTERPASS" | sha256sum | cut -d " " -f 1 > .master
     echo ""
     echo ""
     echo "-> Password created successfully!"
