@@ -27,8 +27,8 @@ echo "#  | | | | '_ \|__ <| '_ \|  ___/ _  |__  \|___ \ \ /\ / / | | | '__/ _| |
 echo "#  | |_| | |_) |__) | | | | |  | (_| |___) |___) \ V  V /| |_| | | | (_| | #"
 echo "#   \___/| .__/____/|_| |_|_|   \__,_|____/|____/ \_/\_/  \___/|_|  \__,_| #"
 echo "#        | |                                                               #"
-echo "#        |_|                                                          v3.0 #"
-echo "#  Developed by Munazir                                https://munazir.com #"
+echo "#        |_|                                                          v2.5 #"
+echo "#  Developed by Munazir                                                    #"
 echo "#  github: github.com/Munazirul/OpenPassword                               #"
 echo "############################################################################"
 echo ""
@@ -90,6 +90,7 @@ function update_pass(){
         echo "$CURRENTPASS" | openssl enc -aes-128-cbc -pbkdf2 -pass pass:$MASTERPASS_1 -a -out .$SERVICE1
         sleep 2
         echo "-> Your password has been stored successfully!"
+	sleep 7
         generate_store
         else
         echo "-> Input Invalid!"
@@ -111,9 +112,33 @@ function update_pass(){
 #         update_pass
 #         fi
 # }
-
+function ssmtp_write(){
+    echo "UseSTARTTLS=YES
+UserTLS=YES
+hostname=localhost
+root=postmaster
+mailhub=smtp.gmail.com:587
+AuthUser=$mail_user
+AuthPass=$mail_password
+TLS_CA_FILE=/etc/ssl/certs/ca-certificates.crt
+FromLineOverride=YES" > /etc/ssmtp/ssmtp.conf
+}
+#configure ssmtp
+function ssmtp_conf(){
+    if [[ `command -v ssmtp` && `command -v mpack` ]];
+        then 
+            ssmtp_write
+            else 
+            echo "->Required packages are not installed. Installing it for you."
+            sleep 1
+            sudo apt-get -y install ssmtp -y >/dev/null 2>&1 && apt-get install mpack -y >/dev/null 2>&1
+            printf "\n\n->Required packages are Installed\n\n"
+            sleep 2
+            ssmtp_write
+            fi
+}
 function show_pass(){
-    printf "\n-> Do you want to view or store a new password (VIEW/STORE/UPDATE/DELETE/CLEAR)\n"
+    printf "\n-> (VIEW/STORE/UPDATE/DELETE/CLEAR/BACKUP)\n"
     read -p "$SETHOSTNAME@OpenPassword~$" -r choice
     if [[ $choice == 'VIEW' || $choice == 'view' ]];
     then
@@ -128,7 +153,7 @@ if [[ ! -z choice1  ]]; then
 fi
     elif [[ $choice == 'STORE' || $choice == 'store' ]];
         then
-    printf "\n-> Specify the accout for which you want to store your password(e.g: Instagram)\n"
+    printf "\n-> Specify the account for which you want to store your password(e.g: Instagram)\n"
     read -p "$SETHOSTNAME@OpenPassword~$" -r SERVICE
     # echo "$SERVICE" >> stored.txt
     ask_generate
@@ -148,11 +173,29 @@ fi
         echo "Your password has been deleted for $SERVICE2"
         sleep 2
         generate_store
+	elif [[ $choice == 'BACKUP' || $choice == 'backup' ]]; then
+        echo "->Before using this feature, goto accounts.google.com > security > 
+singning in to google > enable (2-step verification + App Password(note down the password)) 
+and enter your gmail and App Password below"
+        echo -e "->Enter your gmail address:\c"
+        read mail_user
+        echo -e "->Enter your App Password:\c"
+        read -s mail_password
+        ssmtp_conf
+        sleep 1
+        #BACKUPFILE=$(zip "OpenPassword-"`date +"%d%m%Y%H%M%S"`"" .* -x .master >/dev/null 2>&1) 
+        zip "OpenPassword-"`date +"%d%m%Y%H%M%S"`"" .* -x .master >/dev/null 2>&1
+        mail_date=$(date +"%d-%b-%Y %H:%M:%S")
+        mpack -s "OpenPassword: Password backup created on $mail_date" OpenPassword-*.zip $mail_user
+        rm -rf OpenPassword-*.zip
+        printf "\n\n->Backupfile has been mailed to you successfully\n\n"
+        sleep 2
+        generate_store
     elif [[ $choice == 'clear' || $choice == 'CLEAR' ]]; then
        clear
         generate_store
     else
-    echo "" ;echo "" ;echo "[+] Thanks for using OpenPassword";sleep 2;clear;exit 0
+    echo "" ;echo "" ;echo "[+] Thank you for using OpenPassword";sleep 2;clear;exit 0
     fi
     # show_pass   
 }
@@ -225,7 +268,7 @@ function generate_store(){
     ask_generate
     else
     # generate_store
-    printf "\n Thanks for using OpenPassword"
+    printf "\n Thank you for using OpenPassword"
     printf "\n Follow me on github: https://github.com/Munazirul"
     sleep 5
     exit 0
@@ -270,7 +313,7 @@ function generate_store(){
 # }
 function validate_masterpassword(){
    # DECRYPTED=$(openssl enc -aes-128-cbc -a -d -pbkdf2 -pass pass:$(cat .key) -in .master -out tmp.txt)
-   HASHED=$(echo -n "$MASTERPASS_1" | sha256sum | cut -d " " -f 1)
+   HASHED=$(echo "$MASTERPASS_1" | md5sum | cut -d " " -f 1)
    # DECRYPTED1=$(cat $HASHED)
    MASTER=$(cat .master | cut -d " " -f 1)
 if [ $HASHED == $MASTER ]
@@ -310,7 +353,7 @@ if [ $MASTERPASS ==  $CONFIRM_MASTERPASS ];
 then 
     echo "$HINT" > .hint
     #echo "$MASTERPASS" | openssl enc -aes-128-cbc -pbkdf2 -pass pass:$SECRETKEY -a -out .master
-    echo -n "$MASTERPASS" | sha256sum | cut -d " " -f 1 > .master
+    echo "$MASTERPASS" | md5sum | cut -d " " -f 1 > .master
     echo ""
     echo ""
     echo "-> Password created successfully!"
@@ -333,3 +376,4 @@ create_password
 # DECRYPTED=$(openssl enc -aes-128-cbc -a -d -pbkdf2 -pass pass:$(cat .key) -in .master -out tmp.txt)
 # if [ $MASTERPASS_1 == $DECRYPTED ]
 # then
+
