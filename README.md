@@ -23,6 +23,6 @@ Breach check
 ![Alt text](/img/breach_check.png)
 
 <p align="center">
-  <img src="/img/stored.png" width="350" title="hover text">
-  <img src="/img/welcome_banner.png" width="350" alt="accessibility text">
+  <img src="/img/stored.png" width="500" title="hover text">
+  <img src="/img/welcome_banner.png" width="500" alt="accessibility text">
 </p>
