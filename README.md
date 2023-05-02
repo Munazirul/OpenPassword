@@ -11,3 +11,5 @@ This makes the tool secure and can be used for storing various passwords.
 3. `chmod +x OpenPass.sh`
 4. `sudo ./OpenPass.sh`
 5. BOOM!
+
+![Alt text](/img/welcome_banner)
