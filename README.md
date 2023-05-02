@@ -12,4 +12,12 @@ This makes the tool secure and can be used for storing various passwords.
 4. `sudo ./OpenPass.sh`
 5. BOOM!
 
+#Screenshots
+Welcome banner
 ![Alt text](/img/welcome_banner.png)
+
+Stored Passwords
+![Alt text](/img/stored.png)
+
+Breach check
+![Alt text](/img/breach_check.png)
