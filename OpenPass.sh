@@ -28,8 +28,8 @@ echo "#  | |_| | |_) |__) | | | | |  | (_| |___) |___) \ V  V /| |_| | | | (_| |
 echo "#   \___/| .__/____/|_| |_|_|   \__,_|____/|____/ \_/\_/  \___/|_|  \__,_| #"
 echo "#        | |                                                               #"
 echo "#        |_|                                                          v2.5 #"
-echo "#  Developed by Munazir                                                    #"
-echo "#  github: github.com/Munazirul/OpenPassword                               #"
+echo "#  Developed by Munazir                           web: https://munazir.com #"
+echo "#  github: https://github.com/Munazirul/OpenPassword                       #"
 echo "############################################################################"
 echo ""
 }
