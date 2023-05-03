@@ -23,10 +23,10 @@ This makes the tool secure and can be used for storing various passwords.
 <p align="center">
   <h2>Welcome banner</h2>
   <img src="/img/welcome_banner.png" width="800" title="hover text">
-  View stored passwords
+  <h2>View stored passwords</h2>
   <img src="/img/stored.png" width="800" alt="accessibility text">
-  Check for breach
+  <h2>Check for breach</h2>
   <img src="/img/breach_check.png" width="800" alt="accessibility text">
-  Backup feature
+  <h2>Backup feature</h2>
   <img src="/img/backup.png" width="800" alt="accessibility text">
 </p>
