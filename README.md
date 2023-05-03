@@ -24,4 +24,5 @@ This makes the tool secure and can be used for storing various passwords.
   <img src="/img/welcome_banner.png" width="800" title="hover text">
   <img src="/img/stored.png" width="800" alt="accessibility text">
   <img src="/img/breach_check.png" width="800" alt="accessibility text">
+  <img src="/img/backup.png" width="800" alt="accessibility text">
 </p>
