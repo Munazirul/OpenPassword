@@ -21,7 +21,7 @@ This makes the tool secure and can be used for storing various passwords.
 5. BOOM!
 
 <p align="center">
-  Welcome banner
+# Welcome banner
   <img src="/img/welcome_banner.png" width="800" title="hover text">
   View stored passwords
   <img src="/img/stored.png" width="800" alt="accessibility text">
