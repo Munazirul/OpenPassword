@@ -6,12 +6,13 @@ Master password is stored locally in sha256 Format.
 This makes the tool secure and can be used for storing various passwords.
 
 # Features
-1. Store passwords with strong encryption using openssl.
-2. Generate strong passwords.
-3. Check for password breach.
-4. Take a backup of all your encrypted passwords to your Gmail. (New feature)
-5. Create password hint.
-6. No breaching passwords in your memory.
+1. Interactice UI on CLI
+2. Store passwords with strong encryption using openssl.
+3. Generate strong passwords.
+4. Check for password breach.
+5. Take a backup of all your encrypted passwords to your Gmail. (New feature)
+6. Create password hint.
+7. No breaching passwords in your memory.
 
 # Steps to install this tool on your linux machine.
 1. `git clone https://github.com/Munazirul/OpenPassword`
