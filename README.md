@@ -5,7 +5,7 @@ This tool uses openssl to encrypt your stored passwords using a secret key, The 
 Master password is stored locally in sha256 Format.
 This makes the tool secure and can be used for storing various passwords.
 
-#Features
+# Features
 1. Store passwords with strong encryption using openssl.
 2. Generate strong passwords.
 3. Check for password breach.
