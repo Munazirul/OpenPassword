@@ -9,8 +9,9 @@ This makes the tool secure and can be used for storing various passwords.
 1. Store passwords with strong encryption using openssl.
 2. Generate strong passwords.
 3. Check for password breach.
-4. Take a backup of all your encrypted passwords to your Gmail.
-5. Generate strong password.
+4. Take a backup of all your encrypted passwords to your Gmail. (New feature)
+5. Create password hint.
+6. No breaching passwords in your memory.
 
 # Steps to install this tool on your linux machine.
 1. `git clone https://github.com/Munazirul/OpenPassword`
